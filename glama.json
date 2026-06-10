@@ -1,1 +1,27 @@
-{"name":"mkopo-mcp","version":"0.1.0","description":"Alternative credit scoring MCP server for Kenya","author":"Gabriel Mahia","license":"MIT","homepage":"https://github.com/gabrielmahia/mkopo-mcp","tags":["credit","kenya","africa","mpesa","fintech","microfinance"],"tools":5,"category":"Finance","transport":"stdio"}
+{
+  "name": "mkopo-mcp",
+  "version": "0.1.0",
+  "description": "MCP server for alternative credit scoring in Kenya using M-PESA behavioral signals. 5 tools.",
+  "author": "Gabriel Mahia",
+  "license": "MIT",
+  "homepage": "https://github.com/gabrielmahia/mkopo-mcp",
+  "tags": [
+    "credit",
+    "kenya",
+    "africa",
+    "mpesa",
+    "fintech",
+    "mkopo"
+  ],
+  "tools": 6,
+  "category": "Finance",
+  "transport": "stdio",
+  "dockerfile": {
+    "build_steps": [
+      "pip install mkopo-mcp"
+    ],
+    "cmd": [
+      "mkopo-mcp"
+    ]
+  }
+}
