@@ -1,0 +1,14 @@
+# Smithery configuration for mkopo-mcp
+# East Africa AI Coordination Infrastructure — AI-KungFU
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    properties: {}
+    required: []
+  commandFunction: |-
+    (config) => ({
+      command: "mkopo-mcp",
+      args: [],
+      env: {}
+    })
