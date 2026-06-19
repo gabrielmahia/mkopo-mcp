@@ -1,5 +1,8 @@
 # 💳 mkopo-mcp — Alternative Credit Scoring MCP Server
 
+[![mkopo-mcp Glama score](https://glama.ai/mcp/servers/gabrielmahia/mkopo-mcp/badges/score.svg)](https://glama.ai/mcp/servers/gabrielmahia/mkopo-mcp)
+
+
 **First alternative credit scoring MCP server for East Africa.**
 
 70%+ of Kenyan adults are "credit invisible" — no formal credit history means no access to capital. M-PESA is a de facto financial history record that predicts repayment behaviour. mkopo-mcp makes that intelligence accessible to AI agents.
