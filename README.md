@@ -1,6 +1,7 @@
 # 💳 mkopo-mcp — Alternative Credit Scoring MCP Server
 
 [![mkopo-mcp Glama score](https://glama.ai/mcp/servers/gabrielmahia/mkopo-mcp/badges/score.svg)](https://glama.ai/mcp/servers/gabrielmahia/mkopo-mcp)
+[![smithery badge](https://smithery.ai/badge/@gabrielmahia/mkopo-mcp)](https://smithery.ai/server/@gabrielmahia/mkopo-mcp)
 
 
 **First alternative credit scoring MCP server for East Africa.**
