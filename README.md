@@ -4,7 +4,7 @@
 [![smithery badge](https://smithery.ai/badge/@gabrielmahia/mkopo-mcp)](https://smithery.ai/server/@gabrielmahia/mkopo-mcp)
 
 
-**First alternative credit scoring MCP server for East Africa.**
+Most East Africans transacting heavily on mobile money have no formal credit file — the data exists in M-PESA history, but no scoring model reads it as an agent-callable tool.
 
 70%+ of Kenyan adults are "credit invisible" — no formal credit history means no access to capital. M-PESA is a de facto financial history record that predicts repayment behaviour. mkopo-mcp makes that intelligence accessible to AI agents.
 
