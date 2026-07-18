@@ -25,6 +25,10 @@ dependencies = ["fastmcp>=2.0.0"]
 Homepage = "https://github.com/gabrielmahia/mkopo-mcp"
 Repository = "https://github.com/gabrielmahia/mkopo-mcp"
 Issues = "https://github.com/gabrielmahia/mkopo-mcp/issues"
+Documentation = "https://github.com/gabrielmahia/nairobi-stack"
+"MCP Registry" = "https://registry.modelcontextprotocol.io"
+Datasets = "https://huggingface.co/gmahia"
+Evaluation = "https://github.com/gabrielmahia/kipimo"
 
 [project.scripts]
 mkopo-mcp = "mkopo_mcp.main:main"
