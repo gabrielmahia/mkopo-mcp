@@ -85,3 +85,9 @@ MIT licensed. Feedback via GitHub Issues only — pull requests are not accepted
 
 Model-agnostic by design: closed APIs, open-weight models, and small distilled models are all first-class citizens.
 <!-- /interconnect:v1 -->
+
+## Demonstration only, and Kenya's rules on automated decisions
+
+These tools produce **synthetic demonstration results**, not credit decisions, and they are not a Credit Reference Bureau product. Do not pass a real person's name or ID number to them.
+
+If you build something real on a score like this, note the law: in Kenya the **Data Protection Act 2019** is in force, including its provisions on decisions made solely by automated processing (section 35). The **Artificial Intelligence Bill 2026** is a Senate bill and is **not law** (as of 2026-10-10); it would add a right to an explanation and to human review of significant automated decisions such as a loan rejection, and commentators expect credit scoring to be treated as high-risk. Every scoring answer from this server carries an `automated_decision_notice` saying so. The lender examples are generic lender *types*, not named companies: an earlier version listed real lenders by tier, which this synthetic score cannot support.

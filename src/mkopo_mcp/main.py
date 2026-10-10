@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # mkopo-mcp — Alternative Credit Scoring MCP Server
 # © 2026 Gabriel Mahia / AI Kung Fu LLC — MIT License
 #
@@ -15,10 +14,26 @@
 # =============================================================================
 
 from __future__ import annotations
-import json
+
 import datetime
+import json
 from typing import Annotated
+
 from fastmcp import FastMCP
+
+# Kenya's rules on automated decisions about people (checked 2026-10-10). The Data Protection Act 2019 is in force; the AI Bill 2026 is a Senate bill, not law.
+AUTOMATED_DECISION_NOTICE = (
+    "This is a demonstration result, not a lending decision. In Kenya the Data Protection Act 2019 (its automated decision-making provisions, section 35) gives people rights "
+    "about decisions made solely by automated processing, and the proposed Artificial Intelligence Bill 2026 (a Senate bill, not law as of 2026-10-10) would add a right to an "
+    "explanation and to human review of significant automated decisions such as a loan rejection; commentators expect credit scoring to be treated as high-risk. "
+    "A lender using a score like this should keep a human in the loop and be able to explain the decision."
+)
+
+
+def _with_notice(result: dict) -> dict:
+    result["automated_decision_notice"] = AUTOMATED_DECISION_NOTICE
+    return result
+
 
 mcp = FastMCP(
     name="mkopo-mcp",
@@ -103,7 +118,7 @@ def alternative_credit_score(
         "THIN_FILE": "Insufficient history. Build signals: save consistently, pay utilities, reduce Fuliza.",
     }
 
-    return {
+    return _with_notice({
         "status": "OK",
         "demo_credit_score": result["score"],
         "credit_tier": result["tier"],
@@ -111,15 +126,16 @@ def alternative_credit_score(
         "score_range": "300 (lowest) to 850 (highest) — mirrors Kenya CRB credit score scale",
         "positive_signals_found": positive,
         "risk_signals_found": negative,
-        "eligible_lenders_demo": {
-            "PRIME": ["KCB", "Equity Bank", "Co-operative Bank", "Standard Chartered", "Absa"],
-            "NEAR_PRIME": ["M-Shwari", "Tala", "Branch", "Zenka", "Timiza"],
-            "SUBPRIME": ["Tala (reduced limit)", "Branch (reduced limit)", "Haraka"],
-            "THIN_FILE": ["Chama/SACCO internal loans", "M-Shwari (starter limit KES 200)"],
+        "illustrative_lender_types": {
+            "PRIME": ["commercial banks"],
+            "NEAR_PRIME": ["digital and mobile-money lenders"],
+            "SUBPRIME": ["digital lenders offering reduced limits"],
+            "THIN_FILE": ["chama or SACCO internal loans", "starter limits from mobile-money lenders"],
         }.get(result["tier"], []),
+        "illustrative_lender_types_note": "Lender TYPES only, for illustration. This synthetic score is not any lender's policy and says nothing about whether a named lender would lend.",
         "note": "DEMO — Synthetic scoring model. Not a CRB product. Consult Metropol, CRB Africa, or TransUnion Kenya for real credit reports.",
         "source": "mkopo-mcp. Methodology: World Bank Financial Inclusion Database 2022, Breza & Kinnan (2021).",
-    }
+    })
 
 
 @mcp.tool(
@@ -161,7 +177,7 @@ def mpesa_creditworthiness(
     if months_analysed >= 12: strengths.append(f"Strong {months_analysed}-month history")
     if fuliza_ratio < 0.05: strengths.append("Low Fuliza dependency")
 
-    return {
+    return _with_notice({
         "status": "OK",
         "financial_profile": {
             "avg_monthly_income_kes": avg_monthly_inflow_kes,
@@ -182,7 +198,7 @@ def mpesa_creditworthiness(
         },
         "note": "DEMO — Synthetic analysis. Real lenders conduct formal CRB checks via Metropol or CRB Africa.",
         "source": "mkopo-mcp. Reference: CBK Prudential Guidelines 2022, Kenya CRB Regulations.",
-    }
+    })
 
 
 @mcp.tool(
@@ -194,14 +210,14 @@ def mpesa_creditworthiness(
     annotations={"readOnlyHint": True},
 )
 def credit_report_summary(
-    full_name: Annotated[str, "Applicant full name (for report header only)"],
-    id_number: Annotated[str, "National ID number (used as report reference — not stored)"],
+    full_name: Annotated[str, "Applicant name, shown in the report header only. DEMONSTRATION tool: use a placeholder, not a real person's name"],
+    id_number: Annotated[str, "National ID number, only its last 4 digits appear in the output. DEMONSTRATION tool: use a placeholder, not a real ID number"],
     employment_type: Annotated[str, "Employment type: formal_employed, self_employed, casual_labour, farmer, gig_worker, unemployed"],
     monthly_income_kes: Annotated[int, "Declared monthly income in KES"],
     existing_loans_count: Annotated[int, "Number of active loans (digital, bank, chama, SACCO)"],
     has_crb_listing: Annotated[bool, "Has been listed with a Kenya Credit Reference Bureau (CRB)"],
 ) -> dict:
-    today = datetime.date.today().isoformat()
+    today = datetime.datetime.now(datetime.timezone.utc).date().isoformat()
     debt_burden = min(5, existing_loans_count)
 
     income_tier = (
@@ -212,7 +228,7 @@ def credit_report_summary(
 
     risk_level = "HIGH" if has_crb_listing else ("MEDIUM" if existing_loans_count > 2 else "LOW")
 
-    return {
+    return _with_notice({
         "status": "OK",
         "report_header": {
             "applicant_name": full_name,
@@ -250,7 +266,7 @@ def credit_report_summary(
         ],
         "disclaimer": "DEMO REPORT — Not a real CRB product. For official Kenya credit report: crbafrica.co.ke or metropol.co.ke",
         "source": "mkopo-mcp. Reference: Kenya CRB Act (Cap. 44A), CBK Prudential Guidelines.",
-    }
+    })
 
 
 @mcp.tool(
@@ -292,7 +308,7 @@ def loan_eligibility(
     affordable = [p for p in eligible if p["max_kes"] >= requested_amount_kes]
     max_capacity = int(monthly_income_kes * 0.3 * 12)
 
-    return {
+    return _with_notice({
         "status": "OK",
         "loan_request": {
             "requested_kes": requested_amount_kes,
@@ -307,11 +323,11 @@ def loan_eligibility(
         "eligible_products": affordable if affordable else eligible[:2],
         "recommendation": (
             f"With {credit_tier} tier and KES {monthly_income_kes:,}/month income, "
-            f"{'the requested KES {:,} is feasible — compare rates below.'.format(requested_amount_kes) if affordable else 'consider a smaller loan amount or building credit history first.'}"
+            f"{f'the requested KES {requested_amount_kes:,} is feasible — compare rates below.' if affordable else 'consider a smaller loan amount or building credit history first.'}"
         ),
         "note": "DEMO — Not actual loan offers. Rates are market estimates. Always read full terms before signing.",
         "source": "mkopo-mcp. Reference: Kenya Bankers Association product catalogue 2024.",
-    }
+    })
 
 
 @mcp.tool(

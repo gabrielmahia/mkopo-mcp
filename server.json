@@ -1,17 +1,17 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
   "name": "io.github.gabrielmahia/mkopo-mcp",
-  "description": "\ud83d\udcb3 mkopo-mcp \u2014 Alternative Credit Scoring MCP Server",
+  "description": "💳 mkopo-mcp — Alternative Credit Scoring MCP Server",
   "repository": {
     "url": "https://github.com/gabrielmahia/mkopo-mcp",
     "source": "github"
   },
-  "version": "0.1.3",
+  "version": "0.1.4",
   "packages": [
     {
       "registryType": "pypi",
       "identifier": "mkopo-mcp",
-      "version": "0.1.3",
+      "version": "0.1.4",
       "transport": {
         "type": "stdio"
       }
