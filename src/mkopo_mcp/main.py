@@ -20,6 +20,7 @@ import json
 from typing import Annotated
 
 from fastmcp import FastMCP
+from pydantic import Field
 
 # Kenya's rules on automated decisions about people (checked 2026-10-10). The Data Protection Act 2019 is in force; the AI Bill 2026 is a Senate bill, not law.
 AUTOMATED_DECISION_NOTICE = (
@@ -85,11 +86,7 @@ def _score_from_signals(positive_count: int, negative_count: int, months: int) -
 
 @mcp.tool(
     description=(
-        "Estimate an alternative credit score from M-PESA behavioural signals. "
-        "Western parallel: FICO score / Nova Credit for immigrants with no US history. "
-        "Inputs are self-reported for demo purposes — a real implementation would "
-        "connect to licensed M-PESA data-sharing APIs with customer consent. "
-        "DEMO — not a real credit bureau product."
+        "Compute a DEMONSTRATION alternative credit score and tier (PRIME, NEAR_PRIME, SUBPRIME or THIN_FILE) from M-PESA usage signals such as months of use, regular deposits, on-time utility payments and Fuliza debt. Use when exploring how alternative data could inform credit. This is NOT a credit score and not a CRB product: a synthetic heuristic with no real data. Automated decisions about people are regulated (Data Protection Act 2019, s.35; the AI Bill 2026 is only proposed, not law). Returns the score, tier and the signals used, with a notice. Read-only."
     ),
     annotations={"readOnlyHint": True},
 )
@@ -140,10 +137,7 @@ def alternative_credit_score(
 
 @mcp.tool(
     description=(
-        "Analyse M-PESA transaction patterns to assess creditworthiness. "
-        "Takes simplified transaction summary inputs (no raw transaction data). "
-        "Western parallel: Plaid income verification, Finicity, Experian Boost. "
-        "DEMO — requires informed customer consent in production."
+        "Estimate a person's savings rate, Fuliza dependence and affordable 12-month loan from average M-PESA inflows and outflows, months analysed, Fuliza usage and whether they run a business paybill. Use when exploring cash-flow-based lending. A DEMO analysis using a 30% debt service ratio: real lenders run formal CRB checks and set their own policy. Returns the financial profile, the debt service capacity and affordable loan, the basis and a notice. Read-only."
     ),
     annotations={"readOnlyHint": True},
 )
@@ -203,9 +197,7 @@ def mpesa_creditworthiness(
 
 @mcp.tool(
     description=(
-        "Generate a structured credit report summary — the document a loan officer "
-        "would review. Western parallel: Experian or Equifax credit report. "
-        "DEMO — not a real CRB product."
+        "Produce a DEMONSTRATION credit report summary for a made-up applicant. Use only to show the format; this is NOT a CRB product. Do not enter a real person's name or ID number: the ID is masked so only its last 4 digits appear, and nothing is stored. Returns a report header, a risk level, recommendations and a disclaimer pointing to the real credit reference bureaus (crbafrica.co.ke, metropol.co.ke). Automated assessments of people are regulated under the Data Protection Act 2019. Read-only."
     ),
     annotations={"readOnlyHint": True},
 )
@@ -271,9 +263,7 @@ def credit_report_summary(
 
 @mcp.tool(
     description=(
-        "Estimate loan eligibility across Kenya lender types. "
-        "Western parallel: LendingTree loan comparison, Bankrate. "
-        "DEMO — not actual loan offers."
+        "Match an income, credit tier and loan purpose to illustrative lender products and check the requested amount against a 30%-of-income repayment capacity. Use when someone asks what they might qualify for. credit_tier must be PRIME, NEAR_PRIME, SUBPRIME or THIN_FILE; an unrecognised tier gets the THIN_FILE products and credit_tier_applied says so. Returns the loan request, an affordability check, the eligible products, a recommendation and a notice. NOT real offers: rates are market estimates labelled DEMO. Read-only."
     ),
     annotations={"readOnlyHint": True},
 )
@@ -320,6 +310,7 @@ def loan_eligibility(
             "max_affordable_annual_repayment_kes": max_capacity,
             "requested_vs_capacity": "WITHIN CAPACITY" if requested_amount_kes <= max_capacity else "EXCEEDS CAPACITY",
         },
+        "credit_tier_applied": credit_tier if credit_tier in LENDER_PRODUCTS else "THIN_FILE",
         "eligible_products": affordable if affordable else eligible[:2],
         "recommendation": (
             f"With {credit_tier} tier and KES {monthly_income_kes:,}/month income, "
@@ -332,9 +323,7 @@ def loan_eligibility(
 
 @mcp.tool(
     description=(
-        "Generate actionable credit improvement tips personalised to the user's situation. "
-        "Western parallel: Credit Karma improvement recommendations. "
-        "DEMO educational content."
+        "Practical steps to move up a credit tier, with an estimated timeline, based on the current tier, Fuliza debt, a CRB listing and months of saving. Use when someone asks how to improve their borrowing standing. An unrecognised tier gets the general timeline. Returns prioritised tips, the estimated improvement timeline and a notice. Educational guidance on DEMO assumptions: speak to a bank for personal advice. Read-only."
     ),
     annotations={"readOnlyHint": True},
 )
