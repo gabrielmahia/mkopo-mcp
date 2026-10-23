@@ -17,6 +17,8 @@ from __future__ import annotations
 
 import datetime
 import json
+from importlib.metadata import PackageNotFoundError
+from importlib.metadata import version as _pkg_version
 from typing import Annotated
 
 from fastmcp import FastMCP
@@ -36,6 +38,12 @@ def _with_notice(result: dict) -> dict:
     return result
 
 
+try:
+    _VERSION = _pkg_version("mkopo-mcp")
+except PackageNotFoundError:  # a source tree that was never installed
+    _VERSION = "0+unknown"
+
+
 mcp = FastMCP(
     name="mkopo-mcp",
     instructions="""Alternative credit scoring MCP server for Kenya.
@@ -45,7 +53,7 @@ mcp = FastMCP(
     IMPORTANT: All scoring is DEMO/synthetic for educational purposes.
     Not a regulated credit bureau. Not for use in actual lending decisions.
     Consult a licensed lender and Kenya CRB before any credit decision.
-    """,
+    """, version=_VERSION,
 )
 
 # Behavioural signals that predict creditworthiness (research-backed)
