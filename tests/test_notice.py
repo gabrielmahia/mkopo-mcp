@@ -1,4 +1,4 @@
-"""Credit scoring is where Kenya's automated-decision rules bite (Data Protection Act 2019 s.35; the AI Bill 2026 is proposed, not law)."""
+"""Credit scoring is where Kenya's automated-decision rules bite (Data Protection Act 2019 s.35; the AI Bill 2026 was proposed, a Senate committee recommended abandoning it in October 2026, and it is not law)."""
 import asyncio
 
 from fastmcp import Client
@@ -23,7 +23,7 @@ def test_every_scoring_tool_carries_the_automated_decision_notice():
 
 def test_the_notice_does_not_overstate_the_proposed_law():
     n = m.AUTOMATED_DECISION_NOTICE
-    assert "proposed" in n and "would add" in n and "commentators expect" in n  # proposed bill, expectation attributed, nothing stated as enacted
+    assert "proposed" in n and "recommended abandoning" in n and "no dedicated AI law" in n and "Commentators expected" in n  # a proposed bill that stalled, expectation attributed, nothing stated as enacted
 
 
 def test_no_real_lender_is_named_as_eligible_for_a_synthetic_score():

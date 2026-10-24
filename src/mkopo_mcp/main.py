@@ -24,11 +24,12 @@ from typing import Annotated
 from fastmcp import FastMCP
 from pydantic import Field
 
-# Kenya's rules on automated decisions about people (checked 2026-10-10). The Data Protection Act 2019 is in force; the AI Bill 2026 is a Senate bill, not law.
+# Kenya's rules on automated decisions about people (checked 2026-10-23). The Data Protection Act 2019 is in force; the AI Bill 2026 is a Senate bill that a Senate committee recommended abandoning in October 2026, so it is not law and Kenya has no dedicated AI law.
 AUTOMATED_DECISION_NOTICE = (
     "This is a demonstration result, not a lending decision. In Kenya the Data Protection Act 2019 (its automated decision-making provisions, section 35) gives people rights "
-    "about decisions made solely by automated processing, and the proposed Artificial Intelligence Bill 2026 (a Senate bill, not law as of 2026-10-10) would add a right to an "
-    "explanation and to human review of significant automated decisions such as a loan rejection; commentators expect credit scoring to be treated as high-risk. "
+    "about decisions made solely by automated processing. The proposed Artificial Intelligence Bill 2026 was meant to add a right to an explanation and to human review of "
+    "significant automated decisions such as a loan rejection, but it is not law: a Senate committee recommended abandoning it in October 2026, so as of 2026-10-23 Kenya has "
+    "no dedicated AI law and the Data Protection Act is what applies. Commentators expected credit scoring to be treated as high-risk under such a law, and a regulator may take the same view. "
     "A lender using a score like this should keep a human in the loop and be able to explain the decision."
 )
 
