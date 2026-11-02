@@ -218,7 +218,7 @@ def credit_report_summary(
     existing_loans_count: Annotated[int, "Number of active loans (digital, bank, chama, SACCO)"],
     has_crb_listing: Annotated[bool, "Has been listed with a Kenya Credit Reference Bureau (CRB)"],
 ) -> dict:
-    today = datetime.datetime.now(datetime.timezone.utc).date().isoformat()
+    today = datetime.datetime.now(datetime.UTC).date().isoformat()
     debt_burden = min(5, existing_loans_count)
 
     income_tier = (
