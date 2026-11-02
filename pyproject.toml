@@ -4,18 +4,17 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mkopo-mcp"
-version = "0.1.9"
+version = "0.1.10"
 description = "MCP server for alternative credit scoring in Kenya — M-PESA-based behavioral signals"
 authors = [{name = "Gabriel Mahia", email = "contact@aikungfu.dev"}]
 license = "MIT"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.11"
 keywords = ["mcp", "credit", "kenya", "africa", "mpesa", "alternative-credit", "fintech", "mkopo"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
