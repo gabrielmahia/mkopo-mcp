@@ -1,7 +1,7 @@
 {
   "$schema": "https://glama.ai/mcp/schemas/1.0.0/server.json",
   "name": "mkopo-mcp",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "MCP server for alternative credit scoring in Kenya — M-PESA-based behavioral signals",
   "author": "Gabriel Mahia",
   "license": "MIT",
@@ -34,6 +34,16 @@
     {
       "name": "credit_improvement_tips",
       "description": "Practical steps to move up a credit tier, with an estimated timeline, based on the current tier, Fuliza debt, a CRB listing and months of saving. Use when someone asks how to improve their borrowing standing. An unrecognised tier gets the general timeline. Returns prioritised tips, the estimated improvement timeline and a notice. Educational guidance on DEMO assumptions: speak to a bank for personal advice. Read-only."
+    },
+    {
+      "name": "kenya_macro_indicators",
+      "description": "Get Kenya's inflation and interest rates for recent years from free official sources: annual inflation from the IMF (with the IMF's projections for the current and coming years marked as projections) and bank lending and deposit rates from the World Bank. Use when someone is weighing a loan, savings or investment and needs the real cost of money in Kenya, or a trend. Returns inflation by year with projections flagged, lending and deposit rates by year, the sources with their terms and the retrieval time; on a network or service failure it returns an error instead of figures. Read-only; contacts an external service.",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
     }
   ],
   "category": "Finance",

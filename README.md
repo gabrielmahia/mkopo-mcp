@@ -34,6 +34,7 @@ In mature economies, credit bureaus have 30+ years of credit card, mortgage, and
 | `credit_report_summary` | Generate structured report like a loan officer would review |
 | `loan_eligibility` | Match to appropriate Kenya lender types |
 | `credit_improvement_tips` | Personalised steps to improve credit tier |
+| `kenya_macro_indicators` | Kenya inflation (IMF, projections flagged) and lending and deposit rates (World Bank) |
 
 ## Quick Start
 
@@ -53,6 +54,12 @@ mkopo-mcp                   # starts on stdio
 
 ---
 *© 2026 Gabriel Mahia / AI Kung Fu LLC · MIT License*
+
+## Live data
+
+- `kenya_macro_indicators`: Kenya's annual inflation (IMF, projections flagged) and lending and deposit rates (World Bank, CC BY 4.0).
+
+Each live answer names its source, attribution and retrieval time; if a service does not answer, the tool returns an error instead of a number. The other tools are unchanged.
 
 ## Part of the East Africa Coordination Stack
 
