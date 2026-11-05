@@ -17,6 +17,12 @@ from __future__ import annotations
 
 import datetime
 import json
+import urllib.error
+import urllib.parse
+import urllib.request
+from datetime import UTC as _UTC
+from datetime import datetime as _dt
+from datetime import timedelta as _td
 from importlib.metadata import PackageNotFoundError
 from importlib.metadata import version as _pkg_version
 from typing import Annotated
@@ -402,6 +408,52 @@ def credit_improvement_tips(
         "note": "DEMO — Educational guidance. For personalised advice, contact a Kenya Bankers Association member bank.",
         "source": "mkopo-mcp. Reference: CBK Financial Consumer Protection Guidelines 2022.",
     }
+
+
+
+# ── Live data (free public services) ─────────────────────────────────
+# Live tools change nothing anywhere, but they contact an outside service, and clients should know that.
+LIVE_READ_ONLY = {"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": True}
+LIVE_TOOLS = {"kenya_macro_indicators"}
+_LIVE_UA = {"User-Agent": "mkopo-mcp (https://github.com/gabrielmahia/mkopo-mcp)", "Accept": "application/json"}
+_LIVE_ERRORS = (urllib.error.URLError, TimeoutError, ValueError, KeyError, TypeError, IndexError)
+
+
+def _live_get(url: str, params: dict | None = None, timeout: float = 20.0):
+    if params:
+        url = url + "?" + urllib.parse.urlencode(params)
+    req = urllib.request.Request(url, headers=_LIVE_UA)
+    with urllib.request.urlopen(req, timeout=timeout) as r:  # fixed https endpoints only
+        return json.loads(r.read().decode("utf-8"))
+
+
+def _live_meta(source: str, attribution: str) -> dict:
+    return {"source": source, "attribution": attribution, "retrieved_at": _dt.now(_UTC).isoformat(timespec="seconds")}
+
+def _wb_series(indicators: dict, years: int) -> list:
+    got = {}
+    for key, ind in indicators.items():
+        d = _live_get(f"https://api.worldbank.org/v2/country/KEN/indicator/{ind}", {"format": "json", "mrnev": years})
+        got[key] = {row["date"]: row["value"] for row in d[1] if row.get("value") is not None}
+    yrs = sorted({y for v in got.values() for y in v}, reverse=True)
+    return [{"year": y, **{k: (round(got[k][y], 2) if y in got[k] else None) for k in indicators}} for y in yrs]
+
+
+@mcp.tool(name="kenya_macro_indicators", annotations=LIVE_READ_ONLY, description="Get Kenya's inflation and interest rates for recent years from free official sources: annual inflation from the IMF (with the IMF's projections for the current and coming years marked as projections) and bank lending and deposit rates from the World Bank. Use when someone is weighing a loan, savings or investment and needs the real cost of money in Kenya, or a trend. Returns inflation by year with projections flagged, lending and deposit rates by year, the sources with their terms and the retrieval time; on a network or service failure it returns an error instead of figures. Read-only; contacts an external service.")
+def kenya_macro_indicators(years: Annotated[int, Field(description="How many recent years to return, between 1 and 15.")] = 5) -> dict:
+    meta = _live_meta("LIVE — IMF DataMapper API (imf.org) and World Bank World Development Indicators API (api.worldbank.org)", "IMF data, free to use with attribution; World Bank open data, CC BY 4.0.")
+    if not 1 <= years <= 15:
+        return {"error": "years must be between 1 and 15", **meta}
+    this_year = _dt.now(_UTC).year
+    try:
+        imf = _live_get("https://www.imf.org/external/datamapper/api/v1/PCPIPCH/KEN")["values"]["PCPIPCH"]["KEN"]
+        rates = _wb_series({"lending_rate_pct": "FR.INR.LEND", "deposit_rate_pct": "FR.INR.DPST"}, years)
+    except _LIVE_ERRORS as e:
+        return {"error": f"a data service did not return usable figures ({type(e).__name__}); no figures are given without it. Try again later.", **meta}
+    wanted = [str(y) for y in range(this_year - years + 1, this_year + 2)]
+    inflation = [{"year": y, "inflation_pct": round(imf[y], 2), "imf_projection": int(y) >= this_year} for y in wanted if y in imf]
+    return {"country": "Kenya", "inflation": inflation, "interest_rates": rates,
+            "note": "IMF figures for the current and later years are projections and are revised; the Central Bank of Kenya publishes the official current rates.", **meta}
 
 
 def main():
