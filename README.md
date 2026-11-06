@@ -2,12 +2,8 @@
 <!-- mcp-name: io.github.gabrielmahia/mkopo-mcp -->
 
 [![mkopo-mcp Glama score](https://glama.ai/mcp/servers/gabrielmahia/mkopo-mcp/badges/score.svg)](https://glama.ai/mcp/servers/gabrielmahia/mkopo-mcp)
-[![smithery badge](https://smithery.ai/badge/@gabrielmahia/mkopo-mcp)](https://smithery.ai/server/@gabrielmahia/mkopo-mcp)
-
 
 Install: `pip install mkopo-mcp` · Use with any MCP client.
-
-
 
 Most East Africans transacting heavily on mobile money have no formal credit file — the data exists in M-PESA history, but no scoring model reads it as an agent-callable tool.
 
