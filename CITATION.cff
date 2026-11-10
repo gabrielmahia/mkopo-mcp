@@ -3,7 +3,7 @@ message: "If you use this software, please cite it as below."
 type: software
 title: "mkopo-mcp"
 abstract: "MCP server for alternative credit scoring in Kenya — M-PESA-based behavioral signals"
-version: "0.1.12"
+version: "0.1.13"
 authors:
   - family-names: "Mahia"
     given-names: "Gabriel"
